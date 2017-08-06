@@ -5,21 +5,24 @@ export class LabyrintheService {
         this.log = new Date().toLocaleString() + " - " + "[labyrinthe-game.service.js]" + " - "
     }
 
-    labInit(length) {
+    labInit(width, height) {
         this.$log.info(this.log + this.labInit.name + " : Initialisation du labyrinthe")
         this.portesPossible = []
         let squareNumber = 0;
         let labMap = new Map()
-        for(let hauteur = 0 ; hauteur < length ; hauteur++ ) {
+        for(let hauteur = 0 ; hauteur < height ; hauteur++ ) {
             let labLigne = []
-            for(let largeur = 0; largeur < length ; largeur++ ) {
+            for(let largeur = 0; largeur < width ; largeur++ ) {
                 let square = {
                     position: squareNumber,
                     number: squareNumber,
                     colonne: largeur,
                     ligne: hauteur,
-                    bas: false,
-                    droite: false
+                    top: false,
+                    rigth: false,
+                    bottom: false,
+                    left: false,
+                    className: ""
                 }
                 labLigne.push(square)
                 squareNumber++
@@ -27,12 +30,13 @@ export class LabyrintheService {
             labMap.set(hauteur, labLigne)
         }
         this.labyrinthe = {
-            length: length,
+            width: width,
+            height: height,
             map: labMap,
         }
     }
 
-    labGenerate(){
+    labGenerate1(){
         this.$log.info(this.log + this.labGenerate.name + " : Génération du labyrinthe")
         this.labInitChemins()
         this.$log.info(this.log + this.labGenerate.name + " : Chemins initialisé = " + this.chemins)
@@ -44,7 +48,7 @@ export class LabyrintheService {
             this.$log.info(this.log + this.labGenerate.name +  " : Traitement de la case " + squareToTreatPosition)
             let squareToTreat = this.labGetSquare(squareToTreatPosition)
             let isDoorHorizontal = doorToTreat % 2 == 0;
-            let positionSquareAdj = (isDoorHorizontal) ? squareToTreatPosition + this.labyrinthe.length : squareToTreatPosition + 1 
+            let positionSquareAdj = (isDoorHorizontal) ? squareToTreatPosition + this.labyrinthe.width : squareToTreatPosition + 1 
             let squareAdj = this.labGetSquare(positionSquareAdj)
             if(squareToTreat.number != squareAdj.number) {
                 if(squareToTreat.number < squareAdj.number) {
@@ -53,9 +57,9 @@ export class LabyrintheService {
                     this.labCompareSquare(squareAdj, squareToTreat)
                 }
                 if(isDoorHorizontal) {
-                    squareToTreat.bas = true
+                    squareToTreat.bottom = true
                 } else {
-                    squareToTreat.droite = true
+                    squareToTreat.rigth = true
                 }
             }
             this.portesPossible.splice(indexDoor,1)
@@ -76,13 +80,13 @@ export class LabyrintheService {
     labInitDoorPossible() {
         this.$log.info(this.log + this.labInitDoorPossible.name + " : Initialisation des portes possibles")
         let index = 0
-        for(let ligne = 0 ; ligne < this.labyrinthe.length ; ligne++ ) {
-            for(let colonne = 0 ; colonne < this.labyrinthe.length ; colonne++ ) {
-                if(ligne != this.labyrinthe.length - 1) {
+        for(let ligne = 0 ; ligne < this.labyrinthe.height ; ligne++ ) {
+            for(let colonne = 0 ; colonne < this.labyrinthe.width ; colonne++ ) {
+                if(ligne != this.labyrinthe.height - 1) {
                     this.portesPossible.push(index)
                 }
                 index++
-                if(colonne != this.labyrinthe.length -1) {
+                if(colonne != this.labyrinthe.width -1) {
                     this.portesPossible.push(index)
                 }
                 index++;
@@ -91,8 +95,8 @@ export class LabyrintheService {
     }
     
     labGetSquare(squareNumber) {
-		let ligne = Math.floor(squareNumber / this.labyrinthe.length)
-		let colonne = (squareNumber - (ligne * this.labyrinthe.length))
+		let ligne = Math.floor(squareNumber / this.labyrinthe.width)
+		let colonne = (squareNumber - (ligne * this.labyrinthe.width))
         return this.labyrinthe.map.get(ligne)[colonne]
     }
 
@@ -107,7 +111,7 @@ export class LabyrintheService {
     
     labPrintInConsole() {
         let stringLigne = '.'
-        for(let i = 0; i < (this.labyrinthe.length*2)-1; i++) {
+        for(let i = 0; i < (this.labyrinthe.width*this.labyrinthe.height)-1; i++) {
             stringLigne += (i%2) ? ',' : '_'
         }
         stringLigne += '.'
@@ -115,10 +119,31 @@ export class LabyrintheService {
         this.labyrinthe.map.forEach(labLigne => {
             stringLigne = '|'
             labLigne.forEach(square => {
-                stringLigne += (square.bas) ? ' ' : '_'
-                stringLigne += (square.droite) ? ',' : '|' 
+                stringLigne += (square.bottom) ? ' ' : '_'
+                stringLigne += (square.rigth) ? ',' : '|' 
             })
             console.log(stringLigne)
+        });
+    }
+
+    labCheckAdjSquare() {
+        this.labyrinthe.map.forEach(labLigne => {
+            labLigne.forEach(square => {
+                if(square.position%this.labyrinthe.width !=  0) {
+                    let leftSquare = this.labGetSquare(square.position - 1)
+                    if(leftSquare.rigth) square.left = true
+                }
+                if(square.position >= this.labyrinthe.width) {
+                    let topSquare = this.labGetSquare(square.position - this.labyrinthe.width)
+                    if(topSquare.bottom) square.top = true
+                }
+                if(square.position === 0) {
+                    square.left = true;
+                }
+                if(square.position === (this.labyrinthe.width * this.labyrinthe.height) -1) {
+                    square.rigth = true;
+                }
+            })
         });
     }
 }

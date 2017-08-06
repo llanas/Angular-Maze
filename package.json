@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "lib": [ "es2017.object" ],
     "scripts": {
         "api": "json-server data.json",
         "start": "webpack-dev-server --content-base public --hot --inline --history-api-fallback"

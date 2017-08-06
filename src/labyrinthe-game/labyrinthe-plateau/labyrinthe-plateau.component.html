@@ -1,8 +1,7 @@
-<div class="row">
-    <h2>{{$ctrl.labLignes.length}}</h2>
-        <table class="labyrinthe-plateau">
-            <tr ng-repeat="(key, value) in $ctrl.labLignes">
-                <td><div ng-repeat="case in value">case</div></td>
-            </tr>
-        </table>
-</div>
+<table class="labyrinthe-plateau">
+    <tr ng-repeat="(key, value) in $ctrl.labLignes">
+        <td ng-repeat="case in value">
+            <labyrinthe-plateau-case case="case"></labyrinthe-plateau-case>
+        </td>
+    </tr>
+</table>
