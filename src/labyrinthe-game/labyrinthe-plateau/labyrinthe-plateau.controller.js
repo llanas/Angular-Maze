@@ -11,8 +11,10 @@ export class LabyrinthePlateauController {
 
     createLabyrinthePlateau(labyrintheMap) {
         this.$log.info(this.log + this.createLabyrinthePlateau.name + "Création du plateau du labyrinthe")
-        this.labLignes = labyrintheMap.map
-        this.$scope.$apply();
-
+        this.labyrintheMap = labyrintheMap
+        this.labLignes = []
+        labyrintheMap.map.forEach(element => {
+            this.labLignes.push(element)
+        });
     }
 }

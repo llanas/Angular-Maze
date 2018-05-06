@@ -7,13 +7,13 @@ import { LabyrintheGame } from './labyrinthe-game.component'
 import { LabyrintheService } from './labyrinthe-game.service' 
 
 //Modules
-import labyrinthePlateau from './labyrinthe-plateau/labyrinthe-plateau-module'
+import LabyrinthePlateau from './labyrinthe-plateau/labyrinthe-plateau-module'
 
 export default angular.module('labyrintheGame', [
-    labyrinthePlateau
+    LabyrinthePlateau
 ])
     .component('labyrintheGame', LabyrintheGame)
 
-    .service('LabyrintheService', LabyrintheService)
+    .service('labyrintheService', LabyrintheService)
 
 .name

@@ -18,8 +18,11 @@ export class LabyrintheService {
                     number: squareNumber,
                     colonne: largeur,
                     ligne: hauteur,
-                    bas: false,
-                    droite: false
+                    top: false,
+                    rigth: false,
+                    down: false,
+                    left: false,
+                    className: ""
                 }
                 labLigne.push(square)
                 squareNumber++
@@ -53,9 +56,9 @@ export class LabyrintheService {
                     this.labCompareSquare(squareAdj, squareToTreat)
                 }
                 if(isDoorHorizontal) {
-                    squareToTreat.bas = true
+                    squareToTreat.down = true
                 } else {
-                    squareToTreat.droite = true
+                    squareToTreat.rigth = true
                 }
             }
             this.portesPossible.splice(indexDoor,1)
@@ -115,10 +118,24 @@ export class LabyrintheService {
         this.labyrinthe.map.forEach(labLigne => {
             stringLigne = '|'
             labLigne.forEach(square => {
-                stringLigne += (square.bas) ? ' ' : '_'
-                stringLigne += (square.droite) ? ',' : '|' 
+                stringLigne += (square.down) ? ' ' : '_'
+                stringLigne += (square.rigth) ? ',' : '|' 
             })
             console.log(stringLigne)
         });
+    }
+
+    labCheckAdjSquare(square) {
+        let leftSquare = labGetSquare(square.position - 1)
+        let topSquare = labGetSquare(square.position - this.labyrinthe.length)
+        if(leftSquare.rigth) square.left = true
+        if(topSquare.down) square.top = true
+    }
+
+    caseSetClass(square) {
+        square.className += (square.top) ? "t" : ""
+        square.className += (square.rigth) ? "r" : ""
+        square.className += (square.down) ? "d" : ""
+        square.className += (square.left) ? "l" : ""
     }
 }
