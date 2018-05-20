@@ -36,7 +36,7 @@ export class LabyrintheService {
         }
     }
 
-    labGenerate1(){
+    labGenerate(){
         this.$log.info(this.log + this.labGenerate.name + " : Génération du labyrinthe")
         this.labInitChemins()
         this.$log.info(this.log + this.labGenerate.name + " : Chemins initialisé = " + this.chemins)

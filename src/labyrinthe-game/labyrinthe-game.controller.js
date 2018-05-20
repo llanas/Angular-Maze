@@ -1,13 +1,19 @@
 export class LabyrintheGameController {
 
-    constructor($rootScope, labyrintheService, $log, $window) {
+    constructor($rootScope, $scope, labyrintheService, $log, $window) {
         this.$rootScope = $rootScope
-        this.$window = $window;
+        this.$scope = $scope
+        this.$window = $window
         this.log = new Date().toLocaleString() + " - " + "[labyrinthe-game.controller.js]" + " - "
         this.$log = $log
         this.labyrintheService = labyrintheService
         this.labyrintheDisplayed = false;
+        angular.element(document).ready(function () {
+            this.labGenerate()
+        });
     }
+
+    
 
     $onInit() {
         this.width = this.$window.innerWidth;
@@ -20,7 +26,7 @@ export class LabyrintheGameController {
         this.labyrintheService.labInit(Math.floor(this.width/40), Math.floor(this.height/40))
         this.$log.log(this.log + this.labGenerate.name + "Entrée dans la fonction generateLab()")
         let t0 = new Date().getMilliseconds()
-        this.labyrintheService.labGenerate1()
+        this.labyrintheService.labGenerate()
         this.labyrintheService.labPrintInConsole()
         this.labyrintheService.labCheckAdjSquare();
         let t1 = new Date().getMilliseconds()
